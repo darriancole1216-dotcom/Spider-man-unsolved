@@ -36,7 +36,7 @@ body {
 
 .page-shell {
   width: min(1400px, 100%);
-  background: rgba(8, 13, 22, 0.6);
+  background: rgba(8, 13, 22, 0.72);
   border: 1px solid var(--border);
   border-radius: 26px;
   box-shadow: 0 24px 60px var(--shadow);
@@ -100,7 +100,7 @@ body {
 
 .app-layout {
   display: grid;
-  grid-template-columns: minmax(0, 2.2fr) minmax(280px, 0.9fr);
+  grid-template-columns: minmax(0, 2.3fr) minmax(280px, 0.9fr);
   min-height: 760px;
 }
 
@@ -207,15 +207,15 @@ svg {
   padding-top: 3px;
 }
 
-.district {
+.district-area {
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.22s ease;
 }
 
-.district:hover,
-.district.active {
+.district-area:hover,
+.district-area.active {
   filter: brightness(1.18) saturate(1.25);
-  stroke: rgba(255, 255, 255, 0.7);
+  stroke: rgba(255, 255, 255, 0.78);
   stroke-width: 3;
 }
 
@@ -225,6 +225,17 @@ svg {
   stroke-width: 4;
   stroke-linecap: round;
   stroke-dasharray: 14 12;
+}
+
+.road-grid {
+  stroke: rgba(148, 167, 202, 0.18);
+  stroke-width: 1.2;
+}
+
+.water-blob {
+  fill: rgba(101, 155, 214, 0.28);
+  stroke: rgba(126, 192, 255, 0.3);
+  stroke-width: 1;
 }
 
 .landmark-shape {

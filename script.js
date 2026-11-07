@@ -2,10 +2,7 @@ const districts = [
   {
     id: 'midtown',
     name: 'Midtown',
-    x: 605,
-    y: 110,
-    w: 360,
-    h: 240,
+    points: '560,130 770,110 930,180 940,380 670,430 470,330 500,180',
     fill: '#213e72',
     description:
       'A dense web of towers, rooftops, and high-speed chases. Midtown is where the skyline and security response meet.',
@@ -16,28 +13,9 @@ const districts = [
     ]
   },
   {
-    id: 'downtown',
-    name: 'Downtown',
-    x: 695,
-    y: 360,
-    w: 310,
-    h: 220,
-    fill: '#1d4e60',
-    description:
-      'Bustling bridges, dark alleys, and financial towers. Best for stealth takedowns and fast rooftop traversal.',
-    missions: [
-      'Track a criminal signal under the elevated trains.',
-      'Stop a chase near the harbor tunnels.',
-      'Save civilians during a bridge blackout.'
-    ]
-  },
-  {
     id: 'harlem',
     name: 'Harlem',
-    x: 470,
-    y: 145,
-    w: 120,
-    h: 205,
+    points: '465,140 560,130 500,180 470,330 370,280 370,180',
     fill: '#2d5d49',
     description:
       'Neighborhood rooftops, old brick corners, and resilient local streets framed by tall, historic blocks.',
@@ -50,10 +28,7 @@ const districts = [
   {
     id: 'upper-east',
     name: 'Upper East Side',
-    x: 330,
-    y: 120,
-    w: 160,
-    h: 180,
+    points: '300,130 370,180 370,280 240,310 200,200 250,135',
     fill: '#4a3d74',
     description:
       'Quiet avenues and elegant facades give way to sharper vantage points whenever the city kicks into overdrive.',
@@ -66,10 +41,7 @@ const districts = [
   {
     id: 'brooklyn',
     name: 'Brooklyn',
-    x: 210,
-    y: 350,
-    w: 360,
-    h: 230,
+    points: '170,350 360,330 430,420 420,560 260,620 120,560 100,420',
     fill: '#385f63',
     description:
       'Transit lines, bridges, and scattered industrial blocks. Great for speed runs and dramatic swing arcs.',
@@ -80,12 +52,22 @@ const districts = [
     ]
   },
   {
+    id: 'downtown',
+    name: 'Downtown',
+    points: '670,430 940,380 1030,470 1010,650 710,660 610,560',
+    fill: '#1d4e60',
+    description:
+      'Bustling bridges, dark alleys, and financial towers. Best for stealth takedowns and fast rooftop traversal.',
+    missions: [
+      'Track a criminal signal under the elevated trains.',
+      'Stop a chase near the harbor tunnels.',
+      'Save civilians during a bridge blackout.'
+    ]
+  },
+  {
     id: 'queens',
     name: 'Queens',
-    x: 70,
-    y: 290,
-    w: 180,
-    h: 250,
+    points: '70,290 200,200 250,135 300,130 240,310 120,420 60,390',
     fill: '#4c5043',
     description:
       'Suburban edges, rail lines, and light industrial pockets create ideal cover for stealth and mobility.',
@@ -98,10 +80,11 @@ const districts = [
 ];
 
 const landmarks = [
-  { name: 'Empire State', x: 770, y: 180 },
-  { name: 'Brooklyn Bridge', x: 420, y: 420 },
-  { name: 'Queensboro', x: 280, y: 314 },
-  { name: 'Hudson', x: 920, y: 495 }
+  { name: 'Empire State', x: 760, y: 210 },
+  { name: 'Brooklyn Bridge', x: 410, y: 470 },
+  { name: 'Queensboro', x: 270, y: 250 },
+  { name: 'Hudson', x: 930, y: 560 },
+  { name: 'Battery', x: 878, y: 660 }
 ];
 
 const districtLookup = Object.fromEntries(districts.map((d) => [d.id, d]));
@@ -109,49 +92,91 @@ const districtLookup = Object.fromEntries(districts.map((d) => [d.id, d]));
 const districtGroup = document.getElementById('districts');
 const routesGroup = document.getElementById('routes');
 const landmarksGroup = document.getElementById('landmarks');
+const waterwaysGroup = document.getElementById('waterways');
 const districtName = document.getElementById('district-name');
 const districtDescription = document.getElementById('district-description');
 const missionList = document.getElementById('district-missions');
 
+function buildWaterways() {
+  const water = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  water.setAttribute('d', 'M 860 0 L 1200 0 L 1200 760 L 860 760 Q 930 650 920 520 Q 930 350 1040 210 Q 1090 150 1200 120 L 1200 0 Z');
+  water.setAttribute('class', 'water-blob');
+  waterwaysGroup.appendChild(water);
+
+  const riverBand = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  riverBand.setAttribute('d', 'M 890 60 Q 980 160 980 260 Q 980 420 1060 560 Q 1110 650 1200 720');
+  riverBand.setAttribute('fill', 'none');
+  riverBand.setAttribute('stroke', 'rgba(170, 222, 255, 0.32)');
+  riverBand.setAttribute('stroke-width', '3');
+  riverBand.setAttribute('stroke-dasharray', '10 14');
+  waterwaysGroup.appendChild(riverBand);
+}
+
+function buildRoadGrid() {
+  const roads = [
+    'M 80 520 L 1120 520',
+    'M 120 300 L 1100 300',
+    'M 200 120 L 200 680',
+    'M 480 70 L 480 700',
+    'M 760 80 L 760 700',
+    'M 960 100 L 960 760',
+    'M 320 180 L 1080 180',
+    'M 180 620 L 1030 620'
+  ];
+
+  const gridGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  roads.forEach((path) => {
+    const road = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    road.setAttribute('d', path);
+    road.setAttribute('class', 'road-grid');
+    gridGroup.appendChild(road);
+  });
+  districtGroup.parentNode.insertBefore(gridGroup, districtGroup);
+}
+
 function buildDistricts() {
-  districts.forEach((district, index) => {
-    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    rect.setAttribute('x', district.x);
-    rect.setAttribute('y', district.y);
-    rect.setAttribute('width', district.w);
-    rect.setAttribute('height', district.h);
-    rect.setAttribute('rx', 24);
-    rect.setAttribute('fill', district.fill);
-    rect.setAttribute('opacity', index === 0 ? '0.95' : '0.8');
-    rect.setAttribute('class', `district active`);
-    rect.setAttribute('data-id', district.id);
+  districts.forEach((district) => {
+    const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+    polygon.setAttribute('points', district.points);
+    polygon.setAttribute('fill', district.fill);
+    polygon.setAttribute('opacity', '0.85');
+    polygon.setAttribute('class', 'district-area');
+    polygon.setAttribute('data-id', district.id);
 
     const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    label.setAttribute('x', district.x + district.w / 2);
-    label.setAttribute('y', district.y + district.h / 2 + 8);
+    const [cx, cy] = getPolygonCenter(district.points);
+    label.setAttribute('x', cx);
+    label.setAttribute('y', cy + 8);
     label.setAttribute('text-anchor', 'middle');
     label.setAttribute('fill', '#edf5ff');
-    label.setAttribute('font-size', '20');
+    label.setAttribute('font-size', '18');
     label.setAttribute('font-weight', '700');
     label.setAttribute('letter-spacing', '0.08em');
     label.textContent = district.name;
 
-    districtGroup.appendChild(rect);
+    districtGroup.appendChild(polygon);
     districtGroup.appendChild(label);
 
-    rect.addEventListener('mouseenter', () => updateSelectedDistrict(district.id));
-    rect.addEventListener('click', () => updateSelectedDistrict(district.id));
-    rect.addEventListener('focus', () => updateSelectedDistrict(district.id));
-    rect.setAttribute('tabindex', '0');
+    polygon.addEventListener('mouseenter', () => updateSelectedDistrict(district.id));
+    polygon.addEventListener('click', () => updateSelectedDistrict(district.id));
+    polygon.addEventListener('focus', () => updateSelectedDistrict(district.id));
+    polygon.setAttribute('tabindex', '0');
   });
+}
+
+function getPolygonCenter(pointsString) {
+  const nums = pointsString.split(' ').map((pair) => pair.split(',').map(Number));
+  const xs = nums.map(([x]) => x);
+  const ys = nums.map(([, y]) => y);
+  return [xs.reduce((a, b) => a + b, 0) / nums.length, ys.reduce((a, b) => a + b, 0) / nums.length];
 }
 
 function buildRoutes() {
   const routeCoords = [
-    [220, 340, 1180, 180],
-    [300, 520, 930, 330],
-    [475, 150, 1100, 250],
-    [390, 560, 760, 150]
+    [160, 420, 1080, 220],
+    [230, 570, 1030, 480],
+    [430, 160, 880, 260],
+    [430, 560, 760, 210]
   ];
 
   routeCoords.forEach(([x1, y1, x2, y2]) => {
@@ -190,14 +215,16 @@ function updateSelectedDistrict(id) {
   districtDescription.textContent = district.description;
   missionList.innerHTML = district.missions.map((mission) => `<li>${mission}</li>`).join('');
 
-  const districtRects = document.querySelectorAll('.district');
-  districtRects.forEach((rect) => {
-    const active = rect.dataset.id === id;
-    rect.classList.toggle('active', active);
-    rect.setAttribute('opacity', active ? '1' : '0.8');
+  const districtPolygons = document.querySelectorAll('.district-area');
+  districtPolygons.forEach((polygon) => {
+    const active = polygon.dataset.id === id;
+    polygon.classList.toggle('active', active);
+    polygon.setAttribute('opacity', active ? '1' : '0.8');
   });
 }
 
+buildWaterways();
+buildRoadGrid();
 buildDistricts();
 buildRoutes();
 buildLandmarks();
